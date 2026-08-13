@@ -9,8 +9,10 @@ import { useDemoStore } from '../store/demoStore'
 
 export function CartPage() {
   const cart = useDemoStore((state) => state.cart)
+  const createdProducts = useDemoStore((state) => state.createdProducts)
+  const commerceProducts = [...sellableProducts, ...createdProducts]
   const subtotal = cart.reduce((sum, line) => {
-    const product = sellableProducts.find((item) => item.id === line.productId)
+    const product = commerceProducts.find((item) => item.id === line.productId)
     return sum + (product?.priceInPaise ?? 0) * line.quantity
   }, 0)
   const cartCount = cart.reduce((count, line) => count + line.quantity, 0)
@@ -87,4 +89,3 @@ export function CartPage() {
     </Container>
   )
 }
-

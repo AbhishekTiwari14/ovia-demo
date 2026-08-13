@@ -13,8 +13,8 @@
   --color-ovia-warning: #9a5b16;
   --color-ovia-danger: #a33f4b;
 
-  --font-display: "Iowan Old Style", "Baskerville", "Times New Roman", serif;
-  --font-sans: "Avenir Next", "Segoe UI", sans-serif;
+  --font-display: "Cormorant Garamond", "Iowan Old Style", "Baskerville", "Palatino Linotype", Georgia, "Times New Roman", serif;
+  --font-sans: "Inter", "Avenir Next", "Segoe UI", sans-serif;
 
   --radius-control: 0.75rem;
   --radius-card: 1.25rem;
@@ -52,6 +52,48 @@ body {
   background:
     radial-gradient(circle at top right, rgb(239 218 236 / 0.34), transparent 28rem),
     var(--color-ovia-ivory);
+}
+
+@layer components {
+  .type-display {
+    font-family: var(--font-display);
+    font-size: clamp(2.75rem, 8vw, 7rem);
+    font-weight: 500;
+    line-height: 0.9;
+    letter-spacing: -0.045em;
+  }
+
+  .type-section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 5vw, 4.75rem);
+    font-weight: 500;
+    line-height: 0.94;
+    letter-spacing: -0.035em;
+    color: var(--color-ovia-ink);
+  }
+
+  .type-eyebrow {
+    font-size: 0.67rem;
+    font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0.17em;
+    text-transform: uppercase;
+    color: var(--color-ovia-primary);
+  }
+
+  .type-supporting {
+    font-size: clamp(0.875rem, 1.4vw, 1rem);
+    line-height: 1.75;
+    color: var(--color-ovia-muted);
+  }
+
+  .customer-primary-action {
+    transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease, transform 140ms ease;
+  }
+
+  .customer-primary-action:active {
+    transform: translateY(1px);
+  }
 }
 
 button,

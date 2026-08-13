@@ -1,52 +1,55 @@
-import type { SellableProduct } from '../../data/productTypes'
+import type { CommerceProduct } from '../../data/productTypes'
 import { ProductCard } from './ProductCard'
 
 interface ProductSectionProps {
+  badge?: string
   eyebrow?: string
   id: string
-  products: readonly SellableProduct[]
+  onOpenCart?: () => void
+  products: readonly CommerceProduct[]
   title: string
   description?: string
 }
 
 export function ProductSection({
+  badge,
   eyebrow,
   id,
+  onOpenCart,
   products,
   title,
   description,
 }: ProductSectionProps) {
   return (
-    <section className="scroll-mt-28 py-10 sm:py-14 lg:py-18" id={id}>
-      <div className="mb-6 flex items-end justify-between gap-5 sm:mb-8">
-        <div className="max-w-xl">
+    <section className="scroll-mt-28 py-18 sm:py-24 lg:py-30" id={id}>
+      <div className="mb-9 flex flex-col justify-between gap-5 sm:mb-12 sm:flex-row sm:items-end">
+        <div className="max-w-2xl">
           {eyebrow && (
-            <p className="mb-2 text-[0.68rem] font-bold tracking-[0.18em] text-ovia-primary uppercase">
+            <p className="type-eyebrow mb-3">
               {eyebrow}
             </p>
           )}
-          <h2 className="font-display text-3xl leading-none tracking-[-0.025em] text-ovia-ink sm:text-4xl">
+          <h2 className="type-section-title">
             {title}
           </h2>
           {description && (
-            <p className="mt-3 text-sm leading-6 text-ovia-muted sm:text-base">
+            <p className="type-supporting mt-4 max-w-xl">
               {description}
             </p>
           )}
         </div>
-        <a
-          className="hidden shrink-0 border-b border-ovia-primary pb-1 text-xs font-bold tracking-[0.12em] text-ovia-primary uppercase transition-colors hover:border-ovia-plum hover:text-ovia-plum sm:block"
-          href={`#${id}`}
-        >
-          View edit
-        </a>
       </div>
-      <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 lg:grid-cols-4 lg:gap-x-6">
+      <div className="grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-7 lg:gap-y-14">
         {products.map((product, index) => (
-          <ProductCard key={product.id} priority={index < 2} product={product} />
+          <ProductCard
+            badge={badge}
+            key={product.id}
+            onOpenCart={onOpenCart}
+            priority={index < 2}
+            product={product}
+          />
         ))}
       </div>
     </section>
   )
 }
-

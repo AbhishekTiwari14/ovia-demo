@@ -1,12 +1,16 @@
 import { AnimatePresence, motion } from 'motion/react'
 import { ArrowLeft, ArrowRight, Check, Heart, Minus, Plus, ShoppingBag, X } from 'lucide-react'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, Navigate, useNavigate, useOutletContext, useParams } from 'react-router-dom'
 
 import { Container } from '../components/layout/LayoutPrimitives'
 import { ProductCard } from '../components/customer/ProductCard'
-import { findProductBySlug, sellableProducts } from '../data/products'
-import type { ProductSize } from '../data/productTypes'
+import { sellableProducts } from '../data/products'
+import {
+  isDemoProduct,
+  isProductActive,
+  type ProductSize,
+} from '../data/productTypes'
 import { classNames } from '../lib/classNames'
 import { formatInr } from '../lib/currency'
 import { useDemoStore } from '../store/demoStore'
@@ -22,6 +26,7 @@ interface ConfirmationSheetProps {
   productName: string
   image: string
   priceInPaise: number
+  quantity: number
   size: ProductSize
   color?: string
 }
@@ -33,6 +38,7 @@ function ConfirmationSheet({
   productName,
   image,
   priceInPaise,
+  quantity,
   size,
   color,
 }: ConfirmationSheetProps) {
@@ -85,7 +91,7 @@ function ConfirmationSheet({
                 <p className="mt-2 text-sm text-ovia-muted">
                   Size <strong className="text-ovia-ink" data-testid="confirmation-size">{size}</strong>
                   {color ? <span> · {color}</span> : null}
-                  <span> · Qty 1</span>
+                  <span> · Qty {quantity}</span>
                 </p>
                 <p className="mt-3 font-semibold text-ovia-plum">{formatInr(priceInPaise)}</p>
               </div>
@@ -120,24 +126,40 @@ export function ProductRoutePage() {
   const navigate = useNavigate()
   const { openCart } = useOutletContext<CustomerOutletContext>()
   const addToCart = useDemoStore((state) => state.addToCart)
+  const createdProducts = useDemoStore((state) => state.createdProducts)
+  const commerceProducts = useMemo(
+    () => [...sellableProducts, ...createdProducts],
+    [createdProducts],
+  )
+  const product = slug
+    ? commerceProducts.find((candidate) => candidate.slug === slug)
+    : undefined
   const isWishlisted = useDemoStore((state) =>
-    slug ? state.wishlistProductIds.includes(findProductBySlug(slug)?.id ?? '') : false,
+    product ? state.wishlistProductIds.includes(product.id) : false,
   )
   const toggleWishlist = useDemoStore((state) => state.toggleWishlist)
   const [selectedSize, setSelectedSize] = useState<ProductSize | null>(null)
   const [selectedColor, setSelectedColor] = useState<string | null>(null)
   const [quantity, setQuantity] = useState(1)
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
-  const product = slug ? findProductBySlug(slug) : undefined
+  const [addToBagState, setAddToBagState] = useState<'idle' | 'adding' | 'added'>('idle')
+  const addToBagTimers = useRef<number[]>([])
+
+  useEffect(() => () => addToBagTimers.current.forEach(window.clearTimeout), [])
 
   const relatedProducts = useMemo(() => {
-    if (!product || product.status !== 'sellable') return []
-    return sellableProducts
-      .filter((item) => item.id !== product.id && item.category === product.category)
+    if (!product || !isProductActive(product)) return []
+    return commerceProducts
+      .filter(
+        (item) =>
+          isProductActive(item) &&
+          item.id !== product.id &&
+          item.category === product.category,
+      )
       .slice(0, 4)
-  }, [product])
+  }, [commerceProducts, product])
 
-  if (!product || product.status !== 'sellable') {
+  if (!product || !isProductActive(product)) {
     return <Navigate replace to="/" />
   }
 
@@ -148,13 +170,18 @@ export function ProductRoutePage() {
   const handleAddToBag = () => {
     if (!selectedSize || !requiredColorSelected) return
 
-    addToCart({
-      productId: product.id,
-      quantity,
-      size: selectedSize,
-      ...(selectedColor ? { color: selectedColor } : {}),
-    })
-    setIsConfirmationOpen(true)
+    setAddToBagState('adding')
+    addToBagTimers.current.push(window.setTimeout(() => {
+      addToCart({
+        productId: product.id,
+        quantity,
+        size: selectedSize,
+        ...(selectedColor ? { color: selectedColor } : {}),
+      })
+      setAddToBagState('added')
+    }, 150))
+    addToBagTimers.current.push(window.setTimeout(() => setIsConfirmationOpen(true), 320))
+    addToBagTimers.current.push(window.setTimeout(() => setAddToBagState('idle'), 1_050))
   }
 
   return (
@@ -173,14 +200,14 @@ export function ProductRoutePage() {
       <Container className="px-0 sm:px-6">
         <div className="grid lg:grid-cols-[1.08fr_0.92fr] lg:gap-12 lg:py-12 xl:gap-20">
           <motion.div
-            className="relative overflow-hidden bg-[#eee3dc] sm:rounded-[2rem]"
+            className="relative overflow-hidden bg-[#eee3dc] sm:rounded-[1.25rem]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
             <img
               alt={product.catalogueName}
-              className="aspect-[4/5] h-full max-h-[49rem] w-full object-cover"
+              className="aspect-[4/5] h-full max-h-[49rem] w-full object-contain"
               fetchPriority="high"
               src={product.image}
             />
@@ -204,9 +231,12 @@ export function ProductRoutePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.08 }}
           >
-            <p className="text-[0.68rem] font-bold tracking-[0.16em] text-ovia-primary uppercase">Ovia catalogue</p>
+            <p className="text-[0.68rem] font-bold tracking-[0.16em] text-ovia-primary uppercase">{isDemoProduct(product) ? 'New Ovia edit' : 'Ovia catalogue'}</p>
             <h1 className="mt-3 font-display text-4xl leading-[1.05] tracking-[-0.035em] sm:text-5xl">{product.catalogueName}</h1>
             <p className="mt-4 font-display text-3xl text-ovia-plum">{formatInr(product.priceInPaise)}</p>
+            {isDemoProduct(product) && (
+              <p className="mt-5 max-w-xl text-sm leading-7 text-ovia-muted">{product.description}</p>
+            )}
 
             <div className="mt-8 border-t border-ovia-line pt-7">
               <div className="flex items-center justify-between gap-4">
@@ -218,7 +248,7 @@ export function ProductRoutePage() {
                   <button
                     aria-pressed={selectedSize === size}
                     className={classNames(
-                      'min-h-12 min-w-14 rounded-full border px-5 text-sm font-bold transition-colors',
+                      'min-h-12 min-w-14 rounded-full border px-5 text-sm font-bold transition-colors duration-150 active:translate-y-px',
                       selectedSize === size
                         ? 'border-ovia-primary bg-ovia-primary text-white'
                         : 'border-ovia-line bg-white text-ovia-ink hover:border-ovia-primary hover:text-ovia-primary',
@@ -286,14 +316,20 @@ export function ProductRoutePage() {
             </div>
 
             <button
-              className="mt-8 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-ovia-primary px-6 text-sm font-bold text-white shadow-[0_12px_30px_rgb(166_79_140/0.22)] transition-colors hover:bg-ovia-plum disabled:cursor-not-allowed disabled:bg-ovia-muted/30 disabled:shadow-none"
+              className="customer-primary-action mt-8 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-ovia-primary px-6 text-sm font-bold text-white shadow-[0_12px_30px_rgb(166_79_140/0.22)] hover:bg-ovia-plum disabled:cursor-not-allowed disabled:bg-ovia-muted/30 disabled:shadow-none"
               data-testid="add-to-bag"
-              disabled={!canAddToBag}
+              disabled={!canAddToBag || addToBagState !== 'idle'}
               onClick={handleAddToBag}
               type="button"
             >
-              <ShoppingBag aria-hidden="true" size={19} />
-              {selectedSize ? 'Add to bag' : 'Select a size to continue'}
+              {addToBagState === 'added' ? <Check aria-hidden="true" size={19} /> : <ShoppingBag aria-hidden="true" size={19} />}
+              {addToBagState === 'adding'
+                ? 'Adding…'
+                : addToBagState === 'added'
+                  ? 'Added to bag'
+                  : selectedSize
+                    ? 'Add to bag'
+                    : 'Select a size to continue'}
             </button>
             <button
               className="mt-3 min-h-11 w-full rounded-full text-sm font-semibold text-ovia-plum hover:bg-ovia-blush/40"
@@ -338,6 +374,7 @@ export function ProductRoutePage() {
           onClose={() => setIsConfirmationOpen(false)}
           priceInPaise={product.priceInPaise * quantity}
           productName={product.catalogueName}
+          quantity={quantity}
           size={selectedSize}
         />
       )}

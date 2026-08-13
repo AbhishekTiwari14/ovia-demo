@@ -15,8 +15,10 @@ interface CartDrawerProps {
 
 export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const cart = useDemoStore((state) => state.cart)
+  const createdProducts = useDemoStore((state) => state.createdProducts)
+  const commerceProducts = [...sellableProducts, ...createdProducts]
   const subtotal = cart.reduce((sum, line) => {
-    const product = sellableProducts.find((item) => item.id === line.productId)
+    const product = commerceProducts.find((item) => item.id === line.productId)
     return sum + (product?.priceInPaise ?? 0) * line.quantity
   }, 0)
 
@@ -53,9 +55,9 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           <motion.aside
             className="absolute right-0 bottom-0 flex max-h-[92dvh] w-full flex-col rounded-t-sheet bg-ovia-ivory shadow-floating sm:top-0 sm:h-full sm:max-h-none sm:max-w-md sm:rounded-none sm:rounded-l-sheet"
             data-testid="cart-drawer"
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
+            initial={{ opacity: 0, x: '100%' }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'spring', stiffness: 340, damping: 34 }}
           >
             <div className="flex items-center justify-between border-b border-ovia-line px-5 py-4 sm:px-6">

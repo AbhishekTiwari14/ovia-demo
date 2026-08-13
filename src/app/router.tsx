@@ -7,6 +7,11 @@ import { CheckoutPage } from '../pages/CheckoutPage'
 import { FoundationPage } from '../pages/FoundationPage'
 import { HomePage } from '../pages/HomePage'
 import { ProductRoutePage } from '../pages/ProductRoutePage'
+import { BusinessDashboardPage } from '../pages/business/BusinessDashboardPage'
+import { BusinessInventoryPage } from '../pages/business/BusinessInventoryPage'
+import { BusinessOrdersPage } from '../pages/business/BusinessOrdersPage'
+import { BusinessProductEditorPage } from '../pages/business/BusinessProductEditorPage'
+import { BusinessProductsPage } from '../pages/business/BusinessProductsPage'
 
 export const router = createBrowserRouter([
   {
@@ -27,53 +32,36 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: (
-          <FoundationPage
-            area="business"
-            description="The business shell, simulated-data disclosure, persistence, and reset control are ready. Dashboard design is deferred."
-            title="Business overview reserved"
-          />
-        ),
+        element: <BusinessDashboardPage />,
       },
       {
         path: 'products',
-        element: (
-          <FoundationPage
-            area="business"
-            description="The products destination is connected to the verified catalogue model. Product management UI is deferred."
-            title="Products route reserved"
-          />
-        ),
+        element: <BusinessProductsPage />,
+      },
+      {
+        path: 'products/new',
+        element: <BusinessProductEditorPage />,
+      },
+      {
+        path: 'products/:productId',
+        element: <BusinessProductEditorPage />,
       },
       {
         path: 'inventory',
-        element: (
-          <FoundationPage
-            area="business"
-            description="Persisted simulated inventory state is available for the future inventory editor."
-            title="Inventory route reserved"
-          />
-        ),
+        element: <BusinessInventoryPage />,
       },
       {
         path: 'orders',
-        element: (
-          <FoundationPage
-            area="business"
-            description="The simulated orders destination is reserved. No real customer or payment data is used."
-            title="Orders route reserved"
-          />
-        ),
+        element: <BusinessOrdersPage />,
       },
       {
         path: 'analytics',
-        element: (
-          <FoundationPage
-            area="business"
-            description="Recharts and Motion are installed for the later analytics phase; no metrics are presented as real Ovia data."
-            title="Analytics route reserved"
-          />
-        ),
+        lazy: async () => {
+          const { BusinessAnalyticsPage } = await import(
+            '../pages/business/BusinessAnalyticsPage'
+          )
+          return { Component: BusinessAnalyticsPage }
+        },
       },
     ],
   },
@@ -82,7 +70,7 @@ export const router = createBrowserRouter([
     element: (
       <FoundationPage
         area="customer"
-        description="This destination is not part of the Phase 1 route map."
+        description="The page you’re looking for isn’t available. Return to the Ovia edit to keep browsing."
         title="Page not found"
       />
     ),

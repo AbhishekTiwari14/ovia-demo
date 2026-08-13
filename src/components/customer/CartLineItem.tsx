@@ -1,7 +1,8 @@
 import { Minus, Plus, Trash2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
-import { findProductBySlug, sellableProducts } from '../../data/products'
+import { sellableProducts } from '../../data/products'
+import { isDemoProduct } from '../../data/productTypes'
 import { formatInr } from '../../lib/currency'
 import { useDemoStore, type CartLine } from '../../store/demoStore'
 
@@ -13,7 +14,10 @@ interface CartLineItemProps {
 export function CartLineItem({ line, compact = false }: CartLineItemProps) {
   const removeFromCart = useDemoStore((state) => state.removeFromCart)
   const setCartQuantity = useDemoStore((state) => state.setCartQuantity)
-  const product = sellableProducts.find((item) => item.id === line.productId)
+  const createdProducts = useDemoStore((state) => state.createdProducts)
+  const product = [...sellableProducts, ...createdProducts].find(
+    (item) => item.id === line.productId,
+  )
 
   if (!product) {
     return null
@@ -25,12 +29,12 @@ export function CartLineItem({ line, compact = false }: CartLineItemProps) {
       data-testid={`cart-line-${product.slug}`}
     >
       <Link
-        className="overflow-hidden rounded-2xl bg-ovia-blush/25"
+        className="aspect-[4/5] self-start overflow-hidden rounded-2xl bg-ovia-blush/25"
         to={`/product/${product.slug}`}
       >
         <img
           alt={product.catalogueName}
-          className="aspect-[4/5] h-full w-full object-cover"
+          className="size-full object-cover"
           src={product.image}
         />
       </Link>
@@ -87,9 +91,9 @@ export function CartLineItem({ line, compact = false }: CartLineItemProps) {
             <Plus aria-hidden="true" size={15} />
           </button>
         </div>
-        {!compact && (
+        {!compact && !isDemoProduct(product) && (
           <span className="sr-only">
-            Catalogue reference {findProductBySlug(product.slug)?.source.fileName}
+            Catalogue reference {product.source.fileName}
           </span>
         )}
       </div>

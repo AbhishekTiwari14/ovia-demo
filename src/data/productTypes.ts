@@ -6,6 +6,7 @@ export type ColorEvidence =
   | 'explicitly-listed'
   | 'catalogue-name'
   | 'catalogue-photo'
+  | 'demo-entered'
 
 export interface ProductColor {
   label: string
@@ -26,31 +27,59 @@ export interface CatalogueSource {
   notes?: string
 }
 
-interface ProductBase {
+interface ProductIdentity {
   id: string
   slug: string
-  catalogueName: string | null
-  priceInPaise: number | null
   sizes: readonly ProductSize[]
   colors: readonly ProductColor[]
-  category: ProductCategory | null
   image: string
+}
+
+interface CatalogueProductBase extends ProductIdentity {
+  catalogueName: string | null
+  priceInPaise: number | null
+  category: ProductCategory | null
   source: CatalogueSource
 }
 
-export interface SellableProduct extends ProductBase {
+export interface SellableProduct extends CatalogueProductBase {
   status: 'sellable'
   catalogueName: string
   priceInPaise: number
   category: ProductCategory
 }
 
-export interface ReferenceOnlyProduct extends ProductBase {
+export interface ReferenceOnlyProduct extends CatalogueProductBase {
   status: 'reference-only'
   reason: 'missing-name-and-price'
   catalogueName: null
   priceInPaise: null
+  category: null
 }
 
 export type Product = SellableProduct | ReferenceOnlyProduct
 
+export type DemoProductStatus = 'active' | 'draft'
+
+export interface DemoProduct extends ProductIdentity {
+  status: 'demo-created'
+  catalogueName: string
+  priceInPaise: number
+  category: ProductCategory
+  publicationStatus: DemoProductStatus
+  description: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type CommerceProduct = SellableProduct | DemoProduct
+
+export function isDemoProduct(
+  product: CommerceProduct,
+): product is DemoProduct {
+  return product.status === 'demo-created'
+}
+
+export function isProductActive(product: CommerceProduct) {
+  return product.status === 'sellable' || product.publicationStatus === 'active'
+}

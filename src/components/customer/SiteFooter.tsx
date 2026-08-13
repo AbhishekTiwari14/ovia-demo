@@ -40,7 +40,7 @@ export function SiteFooter() {
             className="mt-4 inline-flex items-center gap-2 text-sm text-white/80 hover:text-white"
             to="/business"
           >
-            Business workspace
+            Business Preview
             <ArrowUpRight aria-hidden="true" size={15} />
           </Link>
           <p className="mt-6 text-xs leading-5 text-white/50">
@@ -50,11 +50,10 @@ export function SiteFooter() {
       </Container>
       <div className="border-t border-white/10">
         <Container className="flex flex-wrap items-center justify-between gap-2 py-5 text-xs text-white/50">
-          <span>Ovia Closet private commerce concept</span>
+          <span>Private concept for Ovia Closet</span>
           <span>Made for the Ovia edit</span>
         </Container>
       </div>
     </footer>
   )
 }
-

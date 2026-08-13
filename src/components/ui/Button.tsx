@@ -39,7 +39,7 @@ export function Button({
   return (
     <button
       className={classNames(
-        'inline-flex items-center justify-center gap-2 rounded-control font-semibold transition-colors duration-200 disabled:cursor-not-allowed',
+        'inline-flex items-center justify-center gap-2 rounded-control font-semibold transition-[background-color,border-color,color,transform] duration-200 active:translate-y-px disabled:cursor-not-allowed disabled:translate-y-0',
         variantClasses[variant],
         sizeClasses[size],
         fullWidth && 'w-full',
@@ -52,4 +52,3 @@ export function Button({
     </button>
   )
 }
-

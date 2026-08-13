@@ -9,15 +9,17 @@ import { formatInr } from '../lib/currency'
 import { useDemoStore } from '../store/demoStore'
 
 const inputClasses =
-  'min-h-12 w-full rounded-xl border border-ovia-line bg-white px-4 text-sm text-ovia-ink placeholder:text-ovia-muted/65 transition-colors hover:border-ovia-primary/50 focus:border-ovia-primary focus:outline-none'
+  'min-h-12 w-full rounded-xl border border-ovia-line bg-white px-4 text-sm text-ovia-ink placeholder:text-ovia-muted/65 transition-colors hover:border-ovia-primary/50 focus:border-ovia-primary focus:outline-none focus-visible:ring-3 focus-visible:ring-ovia-primary/25'
 
 export function CheckoutPage() {
   const cart = useDemoStore((state) => state.cart)
+  const createdProducts = useDemoStore((state) => state.createdProducts)
+  const commerceProducts = [...sellableProducts, ...createdProducts]
   const clearCart = useDemoStore((state) => state.clearCart)
   const [isComplete, setIsComplete] = useState(false)
   const [firstName, setFirstName] = useState('')
   const subtotal = cart.reduce((sum, line) => {
-    const product = sellableProducts.find((item) => item.id === line.productId)
+    const product = commerceProducts.find((item) => item.id === line.productId)
     return sum + (product?.priceInPaise ?? 0) * line.quantity
   }, 0)
 
@@ -151,7 +153,7 @@ export function CheckoutPage() {
             </div>
             <div className="mt-5 max-h-80 space-y-4 overflow-y-auto pr-1">
               {cart.map((line) => {
-                const product = sellableProducts.find((item) => item.id === line.productId)
+                const product = commerceProducts.find((item) => item.id === line.productId)
                 if (!product) return null
                 return (
                   <div className="grid grid-cols-[4rem_1fr_auto] gap-3" key={line.id}>
