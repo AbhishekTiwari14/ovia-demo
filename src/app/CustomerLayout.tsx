@@ -23,12 +23,12 @@ function BagButton({ cartCount, dataTestId, onOpen, reducedMotion }: BagButtonPr
   return (
     <button
       aria-label={`Open bag with ${cartCount} ${cartCount === 1 ? 'item' : 'items'}`}
-      className="relative flex size-11 items-center justify-center rounded-full text-ovia-plum transition-colors hover:bg-ovia-blush/50"
+      className="relative flex size-12 items-center justify-center rounded-full text-ovia-plum transition-colors hover:bg-ovia-blush/50"
       data-testid={dataTestId}
       onClick={onOpen}
       type="button"
     >
-      <ShoppingBag aria-hidden="true" size={19} />
+      <ShoppingBag aria-hidden="true" size={20} />
       <AnimatePresence mode="popLayout">
         {cartCount > 0 && (
           <motion.span
@@ -87,16 +87,16 @@ export function CustomerLayout() {
         )}
         data-header-state={integratedHeader ? 'integrated' : 'solid'}
       >
-        <Container className="relative flex min-h-16 items-center justify-between lg:hidden">
-          <button aria-label="Open navigation" className="flex size-11 items-center justify-center rounded-full text-ovia-plum transition-colors hover:bg-ovia-blush/50" data-testid="mobile-menu-trigger" onClick={() => setIsMenuOpen(true)} type="button">
-            <Menu aria-hidden="true" size={21} />
+        <Container className="relative flex min-h-17 items-center justify-between lg:hidden">
+          <button aria-label="Open navigation" className="flex size-12 items-center justify-center rounded-full text-ovia-plum transition-colors hover:bg-ovia-blush/50" data-testid="mobile-menu-trigger" onClick={() => setIsMenuOpen(true)} type="button">
+            <Menu aria-hidden="true" size={22} />
           </button>
           <Link aria-label="Ovia Closet home" className="absolute left-1/2 -translate-x-1/2" to="/">
-            <img alt="Ovia" className="size-10 object-cover" height="40" src="/brand/ovia-logo.jpg" width="40" />
+            <img alt="Ovia" className="size-11 object-cover" height="44" src="/brand/ovia-logo.jpg" width="44" />
           </Link>
-          <div className="flex items-center gap-0.5">
-            <button aria-label="Search Ovia products" className="flex size-11 items-center justify-center rounded-full text-ovia-plum transition-colors hover:bg-ovia-blush/50" data-testid="mobile-search-trigger" onClick={() => setIsSearchOpen(true)} type="button">
-              <Search aria-hidden="true" size={19} />
+          <div className="flex items-center">
+            <button aria-label="Search Ovia products" className="flex size-12 items-center justify-center rounded-full text-ovia-plum transition-colors hover:bg-ovia-blush/50" data-testid="mobile-search-trigger" onClick={() => setIsSearchOpen(true)} type="button">
+              <Search aria-hidden="true" size={20} />
             </button>
             <BagButton cartCount={cartCount} dataTestId="header-bag-button" onOpen={() => setIsCartOpen(true)} reducedMotion={prefersReducedMotion} />
           </div>

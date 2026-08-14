@@ -33,7 +33,7 @@ export function BusinessDiscoveryPill() {
         <motion.aside
           animate={{ opacity: 1, y: 0 }}
           aria-label="Business Preview discovery"
-          className="fixed right-5 bottom-5 z-35 hidden max-w-[calc(100vw-2.5rem)] items-center rounded-full border border-ovia-primary/22 bg-ovia-ivory/96 pl-4 shadow-[0_12px_34px_rgb(41_35_39/0.16)] backdrop-blur-xl md:flex lg:right-7 lg:bottom-7"
+          className="fixed right-7 bottom-7 z-35 hidden max-w-[calc(100vw-3.5rem)] items-center rounded-full border border-ovia-primary/22 bg-ovia-ivory/96 pl-4 shadow-[0_12px_34px_rgb(41_35_39/0.16)] backdrop-blur-xl lg:flex"
           data-testid="business-discovery-pill"
           exit={{ opacity: 0, y: prefersReducedMotion ? 0 : 6 }}
           initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 10 }}

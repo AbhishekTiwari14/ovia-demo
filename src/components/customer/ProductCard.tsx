@@ -112,7 +112,7 @@ export function ProductCard({
         </button>
       </div>
 
-      <div className={classNames('pt-3.5', variant === 'featured' && 'lg:pb-2')}>
+      <div className={classNames('pt-3', variant === 'featured' && 'lg:pb-2')}>
         {variant === 'featured' && <p className="type-eyebrow mb-2 hidden lg:block">The statement piece</p>}
         <Link
           className={classNames(
@@ -123,10 +123,10 @@ export function ProductCard({
         >
           {product.catalogueName}
         </Link>
-        <p className={classNames('mt-1.5 font-sans font-bold text-ovia-plum', variant === 'featured' ? 'text-base lg:text-lg' : 'text-[0.9rem] sm:text-base')}>
+        <p className={classNames('mt-1 font-sans font-bold text-ovia-plum', variant === 'featured' ? 'text-base lg:text-lg' : 'text-[0.9rem] sm:text-base')}>
           {formatInr(product.priceInPaise)}
         </p>
-        <p className="mt-2 text-[0.7rem] tracking-[0.03em] text-ovia-muted sm:text-xs">
+        <p className="mt-1.5 text-[0.7rem] tracking-[0.03em] text-ovia-muted sm:mt-2 sm:text-xs">
           Sizes {product.sizes.join(' · ')}
         </p>
       </div>

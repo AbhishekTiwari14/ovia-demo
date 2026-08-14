@@ -84,6 +84,15 @@ async function capture(name) {
   const result = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false })
   await writeFile(join(outputDirectory, `${name}.png`), Buffer.from(result.data, 'base64'))
 }
+async function captureFull(name) {
+  const dimensions = await evaluate(`({ width: document.documentElement.scrollWidth, height: document.documentElement.scrollHeight })`)
+  const result = await send('Page.captureScreenshot', {
+    format: 'png',
+    captureBeyondViewport: true,
+    clip: { x: 0, y: 0, width: dimensions.width, height: dimensions.height, scale: 1 },
+  })
+  await writeFile(join(outputDirectory, `${name}.png`), Buffer.from(result.data, 'base64'))
+}
 
 await send('Page.enable')
 await send('Runtime.enable')
@@ -96,27 +105,40 @@ for (const viewport of viewports) {
   const audit = await evaluate(`(() => {
     const hero = document.querySelector('[data-testid="home-hero-carousel"]')
     const slide = document.querySelector('[data-testid="hero-active-slide"]')
-    const image = slide.querySelector('img')
-    const cta = document.querySelector('[data-testid="hero-cta"]')
+    const visible = (element) => element && getComputedStyle(element).display !== 'none' && element.getBoundingClientRect().width > 0
+    const image = [...slide.querySelectorAll('img')].find(visible)
+    const cta = innerWidth < 640
+      ? document.querySelector('[data-testid="hero-mobile-cta"]')
+      : document.querySelector('[data-testid="hero-cta"]')
     const categories = document.querySelector('#category-title').parentElement.parentElement.querySelectorAll('a')
     const mobile = innerWidth < 1024
     const menu = document.querySelector('[data-testid="mobile-menu-trigger"]')
     const search = document.querySelector('[data-testid="mobile-search-trigger"]')
     const mobileBag = document.querySelector('[data-testid="header-bag-button"]')
     const desktopBusiness = document.querySelector('[data-testid="desktop-business-preview"]')
-    const visible = (element) => element && getComputedStyle(element).display !== 'none' && element.getBoundingClientRect().width > 0
     const rect = (element) => element.getBoundingClientRect()
+    const firstCategory = categories[0]
+    const newArrivalImage = document.querySelector('#new-arrivals article img')
+    const editorialImage = document.querySelector('#one-shoulder-edit article img')
     return {
       width: document.documentElement.clientWidth,
       scrollWidth: document.documentElement.scrollWidth,
+      viewportHeight: innerHeight,
       heroRatio: rect(hero).height / innerHeight,
       imageRatio: rect(image).height / rect(hero).height,
       ctaHeight: rect(cta).height,
+      ctaText: cta.innerText.trim(),
       imageLoaded: image.complete && image.naturalWidth > 0,
       indicators: [...document.querySelectorAll('[data-testid^="hero-indicator-"]')].every((item) => rect(item).height >= 44),
       mobileControls: mobile ? [menu, search, mobileBag].every(visible) : !visible(menu) && !visible(search),
       businessEntry: mobile ? !visible(desktopBusiness) : visible(desktopBusiness),
       categoryCards: categories.length,
+      categoryCardsVisible: innerWidth / (rect(firstCategory).width + 12),
+      newArrivalAspect: rect(newArrivalImage).width / rect(newArrivalImage).height,
+      newArrivalHeight: rect(newArrivalImage).height,
+      editorialAspect: rect(editorialImage).width / rect(editorialImage).height,
+      editorialHeight: rect(editorialImage).height,
+      mobileHeroIsMinimal: innerWidth >= 640 || (![...slide.querySelectorAll('h1')].some(visible) && cta.innerText.includes('Shop Now')),
       reveal: Boolean(document.querySelector('[data-testid="business-reveal-section"]')),
       floatingPillVisible: visible(document.querySelector('[data-testid="business-discovery-pill"]')),
       brokenImages: [...document.images].filter((item) => item.complete && item.naturalWidth === 0).length,
@@ -128,8 +150,11 @@ for (const viewport of viewports) {
   assert(audit.mobileControls && audit.businessEntry, `${viewport.width}px responsive header is incorrect`)
   assert(audit.categoryCards >= 4 && audit.reveal, `${viewport.width}px discovery content is incomplete`)
   if (viewport.width <= 430) {
-    assert(audit.heroRatio >= 0.7 && audit.heroRatio <= 0.82, `${viewport.width}px hero is not 70–80vh (${audit.heroRatio.toFixed(3)})`)
-    assert(audit.imageRatio >= 0.6, `${viewport.width}px hero is not image-first`)
+    assert(audit.heroRatio >= 0.65 && audit.heroRatio <= 0.72, `${viewport.width}px hero is not 65–72vh (${audit.heroRatio.toFixed(3)})`)
+    assert(audit.imageRatio >= 0.98 && audit.mobileHeroIsMinimal, `${viewport.width}px hero is not a dedicated minimal image composition`)
+    assert(audit.categoryCardsVisible >= 2.05 && audit.categoryCardsVisible <= 2.45, `${viewport.width}px category rail does not show roughly 2.1–2.4 cards`)
+    assert(audit.newArrivalAspect >= 0.79 && audit.newArrivalAspect <= 0.81 && audit.newArrivalHeight < audit.viewportHeight * 0.4, `${viewport.width}px New Arrivals cards are too tall`)
+    assert(audit.editorialAspect >= 0.79 && audit.editorialAspect <= 0.81 && audit.editorialHeight < audit.viewportHeight * 0.7, `${viewport.width}px editorial feature is too tall`)
     assert(!audit.floatingPillVisible, `${viewport.width}px floating pill obstructs the mobile storefront`)
   }
 
@@ -158,6 +183,12 @@ for (const viewport of viewports) {
   }
   await capture(`${viewport.width}-home`)
   if (viewport.width === 390) {
+    for (let index = 0; index < 3; index += 1) {
+      await evaluate(`document.querySelector('[data-testid="hero-indicator-${index}"]').click()`)
+      await waitFor(`document.querySelector('[data-testid="hero-active-slide"]')?.dataset.slideIndex === '${index}'`, `mobile hero slide ${index + 1}`)
+      await sleep(120)
+      await capture(`390-hero-slide-${index + 1}`)
+    }
     for (const [name, selector] of [
       ['categories', '#category-title'],
       ['new-arrivals', '#new-arrivals'],
@@ -170,14 +201,47 @@ for (const viewport of viewports) {
       await sleep(220)
       await capture(`390-${name}`)
     }
+    await captureFull('390-home-full')
+    await evaluate(`window.scrollTo({ top: 0, behavior: 'instant' })`)
+  } else if (viewport.width <= 430) {
+    const pageHeight = await evaluate(`document.documentElement.scrollHeight`)
+    for (let y = 0; y < pageHeight; y += 700) {
+      await evaluate(`window.scrollTo({ top: ${y}, behavior: 'instant' })`)
+      await sleep(45)
+    }
+    await captureFull(`${viewport.width}-home-full`)
     await evaluate(`window.scrollTo({ top: 0, behavior: 'instant' })`)
   }
   responsive.push({ viewport: viewport.width, ...audit })
+
+  if (viewport.width <= 430) {
+    await navigate('/product/brown-off-shoulder-dress')
+    const phonePdp = await evaluate(`(() => {
+      const image=document.querySelector('img[alt="Brown Off Shoulder Dress"]')
+      const imageRect=image.getBoundingClientRect()
+      const sticky=document.querySelector('[data-testid="mobile-pdp-action-bar"]')
+      const sizeS=document.querySelector('[data-testid="size-S"]')
+      return {
+        width:document.documentElement.clientWidth,
+        scrollWidth:document.documentElement.scrollWidth,
+        imageLeft:imageRect.left,
+        imageRight:imageRect.right,
+        imageHeight:imageRect.height,
+        viewportHeight:innerHeight,
+        stickyVisible:sticky.getBoundingClientRect().height>0,
+        stickyDisabled:document.querySelector('[data-testid="mobile-sticky-add-to-bag"]').disabled,
+        sizeTarget:sizeS.getBoundingClientRect().height,
+      }
+    })()`)
+    assert(phonePdp.width === phonePdp.scrollWidth && phonePdp.imageLeft === 0 && phonePdp.imageRight === phonePdp.width, `${viewport.width}px PDP image is not deliberately full width`)
+    assert(phonePdp.imageHeight < phonePdp.viewportHeight * 0.65 && phonePdp.stickyVisible && phonePdp.stickyDisabled && phonePdp.sizeTarget >= 44, `${viewport.width}px PDP mobile composition failed`)
+    await capture(`${viewport.width}-pdp-top`)
+  }
 }
 
 await setViewport({ width: 390, height: 844 })
 await reset()
-await evaluate(`document.querySelector('[data-testid="hero-cta"]').click()`)
+await evaluate(`document.querySelector('[data-testid="hero-mobile-cta"]').click()`)
 await waitFor(`location.pathname === '/product/brown-off-shoulder-dress'`, 'Brown Dress PDP from home')
 await sleep(280)
 let pdp = await evaluate(`(() => {

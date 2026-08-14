@@ -5,7 +5,7 @@ import { Container } from '../layout/LayoutPrimitives'
 
 export function SiteFooter() {
   return (
-    <footer className="mt-12 border-t border-ovia-line bg-ovia-plum text-white">
+    <footer className="border-t border-white/10 bg-ovia-plum text-white">
       <Container className="grid gap-10 py-12 sm:grid-cols-[1.4fr_1fr_1fr] sm:py-16">
         <div className="max-w-sm">
           <img

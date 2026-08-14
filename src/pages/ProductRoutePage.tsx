@@ -198,7 +198,7 @@ export function ProductRoutePage() {
         </Container>
       </div>
 
-      <Container className="px-0 sm:px-6">
+      <div className="mx-auto w-full max-w-360 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-[1.08fr_0.92fr] lg:gap-12 lg:py-12 xl:gap-20">
           <motion.div
             className="relative overflow-hidden bg-[#eee3dc] sm:rounded-[1.25rem]"
@@ -208,7 +208,7 @@ export function ProductRoutePage() {
           >
             <img
               alt={product.catalogueName}
-              className="aspect-[4/5] h-full max-h-[49rem] w-full object-contain"
+              className="aspect-[4/5] max-h-[34rem] w-full object-contain lg:max-h-[49rem]"
               fetchPriority="high"
               src={product.image}
             />
@@ -228,19 +228,19 @@ export function ProductRoutePage() {
           </motion.div>
 
           <motion.div
-            className="px-5 py-7 sm:px-0 sm:py-10 lg:sticky lg:top-28 lg:self-start lg:py-6"
+            className="px-4 py-6 sm:px-0 sm:py-10 lg:sticky lg:top-28 lg:self-start lg:py-6"
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.08 }}
           >
             <p className="text-[0.68rem] font-bold tracking-[0.16em] text-ovia-primary uppercase">{isDemoProduct(product) ? 'New Ovia edit' : 'Ovia catalogue'}</p>
-            <h1 className="mt-3 font-display text-[2.15rem] leading-[1.02] tracking-[-0.035em] sm:text-5xl">{product.catalogueName}</h1>
-            <p className="mt-3 text-xl font-bold text-ovia-plum sm:mt-4 sm:font-display sm:text-3xl sm:font-medium">{formatInr(product.priceInPaise)}</p>
+            <h1 className="mt-2.5 font-display text-[2.05rem] leading-[1] tracking-[-0.035em] sm:text-5xl">{product.catalogueName}</h1>
+            <p className="mt-2.5 text-xl font-bold text-ovia-plum sm:mt-4 sm:font-display sm:text-3xl sm:font-medium">{formatInr(product.priceInPaise)}</p>
             {isDemoProduct(product) && (
-              <p className="mt-5 max-w-xl text-sm leading-7 text-ovia-muted">{product.description}</p>
+              <p className="mt-5 hidden max-w-xl text-sm leading-7 text-ovia-muted lg:block">{product.description}</p>
             )}
 
-            <dl className="mt-6 grid grid-cols-2 border-y border-ovia-line py-4 text-sm">
+            <dl className="mt-6 hidden grid-cols-2 border-y border-ovia-line py-4 text-sm lg:grid">
               <div className="border-r border-ovia-line pr-4">
                 <dt className="text-xs text-ovia-muted">Available sizes</dt>
                 <dd className="mt-1.5 font-semibold">{product.sizes.join(', ')}</dd>
@@ -251,17 +251,17 @@ export function ProductRoutePage() {
               </div>
             </dl>
 
-            <div className="mt-7">
+            <div className="mt-6 lg:mt-7">
               <div className="flex items-center justify-between gap-4">
                 <h2 className="text-sm font-bold tracking-[0.08em] uppercase">Select size</h2>
                 <span className="text-xs text-ovia-muted">Required</span>
               </div>
-              <div className="mt-4 flex flex-wrap gap-2.5" role="group" aria-label="Available sizes">
+              <div className="mt-3.5 flex flex-wrap gap-2.5" role="group" aria-label="Available sizes">
                 {product.sizes.map((size) => (
                   <button
                     aria-pressed={selectedSize === size}
                     className={classNames(
-                      'min-h-13 min-w-14 rounded-full border px-5 text-sm font-bold transition-colors duration-150 active:translate-y-px',
+                      'min-h-12 min-w-14 rounded-full border px-5 text-sm font-bold transition-colors duration-150 active:translate-y-px',
                       selectedSize === size
                         ? 'border-ovia-primary bg-ovia-primary text-white'
                         : 'border-ovia-line bg-white text-ovia-ink hover:border-ovia-primary hover:text-ovia-primary',
@@ -278,12 +278,12 @@ export function ProductRoutePage() {
             </div>
 
             {selectableColors.length > 0 && (
-              <div className="mt-7 border-t border-ovia-line pt-7">
+              <div className="mt-6 border-t border-ovia-line pt-6 lg:mt-7 lg:pt-7">
                 <div className="flex items-center justify-between gap-4">
                   <h2 className="text-sm font-bold tracking-[0.08em] uppercase">Select color</h2>
                   <span className="text-xs text-ovia-muted">Required</span>
                 </div>
-                <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="Available colors">
+                <div className="mt-3.5 flex flex-wrap gap-2" role="group" aria-label="Available colors">
                   {selectableColors.map((color) => (
                     <button
                       aria-pressed={selectedColor === color.label}
@@ -304,9 +304,9 @@ export function ProductRoutePage() {
               </div>
             )}
 
-            <div className="mt-7 border-t border-ovia-line pt-7">
+            <div className="mt-6 border-t border-ovia-line pt-6 lg:mt-7 lg:pt-7">
               <h2 className="text-sm font-bold tracking-[0.08em] uppercase">Quantity</h2>
-              <div className="mt-4 inline-flex items-center rounded-full border border-ovia-line bg-white">
+              <div className="mt-3.5 inline-flex items-center rounded-full border border-ovia-line bg-white">
                 <button
                   aria-label="Decrease quantity"
                   className="flex size-12 items-center justify-center rounded-full text-ovia-plum hover:bg-ovia-blush/45 disabled:opacity-35"
@@ -327,6 +327,20 @@ export function ProductRoutePage() {
                 </button>
               </div>
             </div>
+
+            <dl className="mt-6 grid grid-cols-2 border-y border-ovia-line py-4 text-sm lg:hidden">
+              <div className="border-r border-ovia-line pr-4">
+                <dt className="text-xs text-ovia-muted">Available sizes</dt>
+                <dd className="mt-1.5 font-semibold">{product.sizes.join(', ')}</dd>
+              </div>
+              <div className="pl-4">
+                <dt className="text-xs text-ovia-muted">Catalogue color</dt>
+                <dd className="mt-1.5 font-semibold">{product.colors[0]?.label}</dd>
+              </div>
+            </dl>
+            {isDemoProduct(product) && (
+              <p className="mt-5 text-sm leading-6 text-ovia-muted lg:hidden">{product.description}</p>
+            )}
 
             <button
               className="customer-primary-action mt-8 hidden min-h-14 w-full items-center justify-center gap-2 rounded-full bg-ovia-primary px-6 text-sm font-bold text-white shadow-[0_12px_30px_rgb(166_79_140/0.22)] hover:bg-ovia-plum disabled:cursor-not-allowed disabled:bg-ovia-muted/30 disabled:shadow-none lg:inline-flex"
@@ -354,14 +368,14 @@ export function ProductRoutePage() {
 
           </motion.div>
         </div>
-      </Container>
+      </div>
 
       {relatedProducts.length > 0 && (
-        <section className="border-t border-ovia-line py-12 sm:py-16">
+        <section className="border-t border-ovia-line py-10 sm:py-16">
           <Container>
             <p className="text-[0.68rem] font-bold tracking-[0.16em] text-ovia-primary uppercase">More from the edit</p>
-            <h2 className="mt-2 font-display text-3xl sm:text-4xl">You may also like</h2>
-            <div className="mt-7 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 lg:gap-6">
+            <h2 className="mt-2 font-display text-[2rem] sm:text-4xl">You may also like</h2>
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:mt-7 sm:gap-5 lg:grid-cols-4 lg:gap-6">
               {relatedProducts.map((item) => <ProductCard key={item.id} onOpenCart={openCart} product={item} />)}
             </div>
           </Container>

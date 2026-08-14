@@ -65,7 +65,7 @@ body {
 
   .type-section-title {
     font-family: var(--font-display);
-    font-size: clamp(2.25rem, 5vw, 4.75rem);
+    font-size: clamp(2.125rem, 5vw, 4.75rem);
     font-weight: 500;
     line-height: 0.94;
     letter-spacing: -0.035em;

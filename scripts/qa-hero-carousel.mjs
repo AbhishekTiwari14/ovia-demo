@@ -87,8 +87,11 @@ for (const viewport of viewports) {
     await sleep(80)
     const audit = await evaluate(`(() => {
       const hero = document.querySelector('[data-testid="home-hero-carousel"]')
-      const image = hero.querySelector('img')
-      const cta = document.querySelector('[data-testid="hero-cta"]')
+      const visible = (element) => element && getComputedStyle(element).display !== 'none' && element.getBoundingClientRect().width > 0
+      const image = [...hero.querySelectorAll('img')].find(visible)
+      const cta = innerWidth < 640
+        ? document.querySelector('[data-testid="hero-mobile-cta"]')
+        : document.querySelector('[data-testid="hero-cta"]')
       const indicators = [...document.querySelectorAll('[data-testid^="hero-indicator-"]')]
       const heroRect = hero.getBoundingClientRect()
       const imageRect = image.getBoundingClientRect()
@@ -112,10 +115,11 @@ for (const viewport of viewports) {
       }
     })()`)
     assert(audit.clientWidth === audit.scrollWidth, `${viewport.width}px slide ${slide.index}: horizontal overflow`)
-    assert(audit.headline && audit.product && audit.price && audit.ctaText === slide.cta, `${viewport.width}px slide ${slide.index}: copy mismatch`)
+    const expectedCta = viewport.width < 640 ? 'Shop Now' : slide.cta
+    assert((viewport.width < 640 || audit.headline) && audit.product && audit.price && audit.ctaText === expectedCta, `${viewport.width}px slide ${slide.index}: copy mismatch`)
     assert(audit.imageVisible, `${viewport.width}px slide ${slide.index}: image not visible`)
     assert(audit.ctaSize.height >= 44 && audit.indicatorsVisible, `${viewport.width}px slide ${slide.index}: controls not comfortably usable`)
-    if (viewport.width <= 430) assert(audit.heroHeight / audit.viewportHeight >= 0.7 && audit.heroHeight / audit.viewportHeight <= 0.82, `${viewport.width}px hero height outside 70–80vh range: ${audit.heroHeight / audit.viewportHeight}`)
+    if (viewport.width <= 430) assert(audit.heroHeight / audit.viewportHeight >= 0.65 && audit.heroHeight / audit.viewportHeight <= 0.72, `${viewport.width}px hero height outside 65–72vh range: ${audit.heroHeight / audit.viewportHeight}`)
     responsive.push({ viewport: viewport.width, slide: Number(slide.index) + 1, objectPosition: audit.objectPosition })
     if (viewport.width === 390 || viewport.width === 1440) await capture(`${viewport.width}-slide-${Number(slide.index) + 1}`)
   }
