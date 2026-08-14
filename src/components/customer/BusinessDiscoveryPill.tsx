@@ -33,7 +33,7 @@ export function BusinessDiscoveryPill() {
         <motion.aside
           animate={{ opacity: 1, y: 0 }}
           aria-label="Business Preview discovery"
-          className="fixed right-3 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-35 flex max-w-[calc(100vw-1.5rem)] items-center rounded-full border border-ovia-primary/22 bg-ovia-ivory/96 pl-3 shadow-[0_12px_34px_rgb(41_35_39/0.16)] backdrop-blur-xl sm:right-5 sm:bottom-5 sm:pl-4 lg:right-7 lg:bottom-7"
+          className="fixed right-5 bottom-5 z-35 hidden max-w-[calc(100vw-2.5rem)] items-center rounded-full border border-ovia-primary/22 bg-ovia-ivory/96 pl-4 shadow-[0_12px_34px_rgb(41_35_39/0.16)] backdrop-blur-xl md:flex lg:right-7 lg:bottom-7"
           data-testid="business-discovery-pill"
           exit={{ opacity: 0, y: prefersReducedMotion ? 0 : 6 }}
           initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 10 }}
@@ -45,8 +45,7 @@ export function BusinessDiscoveryPill() {
             to="/business"
           >
             <Sparkles aria-hidden="true" className="shrink-0 text-ovia-primary" size={15} />
-            <span className="sm:hidden">Ovia behind the scenes</span>
-            <span className="hidden sm:inline">See how Ovia runs behind the scenes</span>
+            <span>See how Ovia runs behind the scenes</span>
             <ArrowRight aria-hidden="true" className="shrink-0" size={15} />
           </Link>
           <button

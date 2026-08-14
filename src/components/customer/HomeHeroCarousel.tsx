@@ -95,7 +95,7 @@ export function HomeHeroCarousel({ slides }: HomeHeroCarouselProps) {
     <section
       aria-label="Ovia featured collection"
       aria-roledescription="carousel"
-      className="relative h-[76svh] min-h-148 max-h-180 overflow-hidden border-b border-ovia-line bg-ovia-ivory focus-visible:outline focus-visible:outline-3 focus-visible:-outline-offset-3 focus-visible:outline-ovia-primary/40 md:h-[74svh] md:min-h-160 md:max-h-200"
+      className="relative h-[78svh] min-h-[38rem] max-h-[44rem] overflow-hidden border-b border-ovia-line bg-ovia-ivory focus-visible:outline focus-visible:outline-3 focus-visible:-outline-offset-3 focus-visible:outline-ovia-primary/40 lg:h-[74svh] lg:min-h-160 lg:max-h-200"
       data-testid="home-hero-carousel"
       onKeyDown={handleKeyDown}
       onTouchCancel={() => { touchStart.current = null }}
@@ -113,7 +113,7 @@ export function HomeHeroCarousel({ slides }: HomeHeroCarouselProps) {
           animate="center"
           aria-label={`${activeSlide.headline}: ${activeSlide.product.catalogueName}`}
           aria-roledescription="slide"
-          className="absolute inset-0 grid grid-rows-[55%_45%] overflow-hidden md:grid-cols-[minmax(23rem,0.9fr)_minmax(25rem,1.1fr)] md:grid-rows-1"
+          className="absolute inset-0 grid grid-rows-[64%_36%] overflow-hidden lg:grid-cols-[minmax(23rem,0.9fr)_minmax(25rem,1.1fr)] lg:grid-rows-1"
           custom={direction}
           data-slide-index={activeIndex}
           data-testid="hero-active-slide"
@@ -125,22 +125,22 @@ export function HomeHeroCarousel({ slides }: HomeHeroCarouselProps) {
           transition={{ duration: prefersReducedMotion ? 0 : 0.62, ease: transitionEase }}
           variants={slideVariants}
         >
-          <div className="relative order-2 flex min-h-0 items-center px-5 pt-3 pb-14 md:order-1 md:px-[clamp(2.5rem,6vw,7.5rem)] md:py-18" style={{ backgroundColor: activeSlide.surface }}>
+          <div className="relative order-2 flex min-h-0 items-center px-5 pt-3 pb-13 lg:order-1 lg:px-[clamp(2.5rem,6vw,7.5rem)] lg:py-18" style={{ backgroundColor: activeSlide.surface }}>
             <motion.div
               animate={{ opacity: 1, y: 0 }}
               className="pointer-events-none relative z-20 max-w-xl"
               initial={{ opacity: 0, y: prefersReducedMotion ? 0 : 14 }}
               transition={{ delay: prefersReducedMotion ? 0 : 0.14, duration: prefersReducedMotion ? 0 : 0.54, ease: transitionEase }}
             >
-              <p className="text-[0.65rem] font-bold tracking-[0.16em] text-ovia-plum uppercase md:text-xs">
+              <p className="text-[0.66rem] font-bold tracking-[0.14em] text-ovia-plum uppercase lg:text-xs">
                 {activeSlide.product.catalogueName} · {formatInr(activeSlide.product.priceInPaise)}
               </p>
-              <h1 className="type-display mt-2 max-w-[20rem] text-ovia-ink md:mt-5 md:max-w-[42rem]">
+              <h1 className="mt-2 max-w-[21rem] font-display text-[clamp(2.55rem,11.5vw,3.25rem)] leading-[0.88] font-medium tracking-[-0.045em] text-ovia-ink lg:mt-5 lg:max-w-[42rem] lg:text-[clamp(4.5rem,6.8vw,7.1rem)] lg:leading-[0.86]">
                 {activeSlide.headline}
               </h1>
-              <p className="mt-3 max-w-sm text-sm leading-6 text-ovia-muted md:mt-7 md:text-lg md:leading-8">{activeSlide.copy}</p>
+              <p className="mt-3 max-w-sm text-sm leading-6 text-ovia-muted lg:mt-7 lg:text-lg lg:leading-8">{activeSlide.copy}</p>
               <Link
-                className="customer-primary-action pointer-events-auto mt-4 inline-flex min-h-12 items-center gap-2 rounded-full bg-ovia-primary px-5 text-sm font-bold text-white shadow-[0_12px_28px_rgb(103_52_83/0.16)] hover:bg-ovia-plum md:mt-8 md:px-6"
+                className="customer-primary-action pointer-events-auto mt-4 inline-flex min-h-12 items-center gap-2 rounded-full bg-ovia-primary px-5 text-sm font-bold text-white shadow-[0_12px_28px_rgb(103_52_83/0.16)] hover:bg-ovia-plum lg:mt-8 lg:px-6"
                 data-testid="hero-cta"
                 onClick={() => setHasUserInteracted(true)}
                 to={`/product/${activeSlide.product.slug}`}
@@ -150,14 +150,14 @@ export function HomeHeroCarousel({ slides }: HomeHeroCarouselProps) {
             </motion.div>
           </div>
 
-          <div className="relative order-1 min-h-0 overflow-hidden md:order-2" style={{ backgroundColor: activeSlide.imageSurface }}>
+          <div className="relative order-1 min-h-0 overflow-hidden lg:order-2" style={{ backgroundColor: activeSlide.imageSurface }}>
             <motion.img
               alt={activeSlide.product.catalogueName}
               animate={{ scale: 1, x: 0 }}
               className={classNames(
                 'size-full',
                 activeSlide.imageFit === 'contain' ? 'object-contain' : 'object-cover',
-                '[object-position:var(--hero-mobile-position)] md:[object-position:var(--hero-desktop-position)]',
+                '[object-position:var(--hero-mobile-position)] lg:[object-position:var(--hero-desktop-position)]',
               )}
               fetchPriority={activeIndex === 0 ? 'high' : 'auto'}
               initial={{ scale: prefersReducedMotion ? 1 : 1.035, x: prefersReducedMotion ? 0 : direction * 8 }}
@@ -168,8 +168,8 @@ export function HomeHeroCarousel({ slides }: HomeHeroCarouselProps) {
               } as CSSProperties}
               transition={{ duration: prefersReducedMotion ? 0 : 0.68, ease: transitionEase }}
             />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-ovia-ink/16 to-transparent md:inset-y-0 md:left-0 md:h-auto md:w-20 md:bg-gradient-to-r" />
-            <span className="pointer-events-none absolute top-4 right-5 font-display text-5xl leading-none text-white/55 md:top-7 md:right-8 md:text-7xl">0{activeIndex + 1}</span>
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-ovia-ink/16 to-transparent lg:inset-y-0 lg:left-0 lg:h-auto lg:w-20 lg:bg-gradient-to-r" />
+            <span className="pointer-events-none absolute top-4 right-5 font-display text-5xl leading-none text-white/60 lg:top-7 lg:right-8 lg:text-7xl">0{activeIndex + 1}</span>
           </div>
 
           <Link
@@ -187,7 +187,7 @@ export function HomeHeroCarousel({ slides }: HomeHeroCarouselProps) {
         </motion.article>
       </AnimatePresence>
 
-      <div className="absolute right-5 bottom-4 z-30 flex items-center gap-2 md:right-auto md:bottom-7 md:left-[clamp(2.5rem,6vw,7.5rem)]" role="tablist" aria-label="Choose featured slide">
+      <div className="absolute right-4 bottom-3 z-30 flex items-center gap-1 lg:right-auto lg:bottom-7 lg:left-[clamp(2.5rem,6vw,7.5rem)]" role="tablist" aria-label="Choose featured slide">
         {slides.map((slide, index) => {
           const selected = activeIndex === index
           return (
@@ -207,13 +207,13 @@ export function HomeHeroCarousel({ slides }: HomeHeroCarouselProps) {
         })}
       </div>
 
-      <div className="absolute right-7 bottom-7 z-30 hidden items-center gap-2 md:flex">
+      <div className="absolute right-7 bottom-7 z-30 hidden items-center gap-2 lg:flex">
         <button aria-label="Previous hero slide" className="flex size-12 items-center justify-center rounded-full border border-ovia-plum/20 bg-ovia-ivory/90 text-ovia-plum shadow-sm backdrop-blur-md transition-colors hover:border-ovia-primary hover:bg-white" data-testid="hero-previous" onClick={showPrevious} type="button"><ArrowLeft aria-hidden="true" size={18} /></button>
         <button aria-label="Next hero slide" className="flex size-12 items-center justify-center rounded-full bg-ovia-primary text-white shadow-sm transition-colors hover:bg-ovia-plum" data-testid="hero-next" onClick={showNext} type="button"><ArrowRight aria-hidden="true" size={18} /></button>
       </div>
 
-      <a className="absolute bottom-5 left-5 z-30 inline-flex min-h-10 items-center gap-2 text-[0.65rem] font-bold tracking-[0.12em] text-ovia-muted uppercase hover:text-ovia-plum md:bottom-7 md:left-1/2 md:-translate-x-1/2" href="#category-title">
-        <span>Discover more</span>
+      <a aria-label="Discover more below" className="absolute bottom-0 left-1/2 z-30 inline-flex min-h-10 -translate-x-1/2 items-center gap-2 text-[0.62rem] font-bold tracking-[0.1em] text-ovia-muted uppercase hover:text-ovia-plum lg:bottom-7" href="#category-title">
+        <span className="hidden lg:inline">Discover more</span>
         <motion.span animate={prefersReducedMotion ? undefined : { y: [0, 4, 0] }} className="flex size-7 items-center justify-center rounded-full border border-ovia-muted/25" transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}><ArrowDown aria-hidden="true" size={13} /></motion.span>
       </a>
 

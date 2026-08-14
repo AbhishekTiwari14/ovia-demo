@@ -1,6 +1,6 @@
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { ArrowRight, ShoppingBag, X } from 'lucide-react'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { formatInr } from '../../lib/currency'
@@ -14,6 +14,10 @@ interface CartDrawerProps {
 }
 
 export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
+  const prefersReducedMotion = useReducedMotion()
+  const [isDesktopDrawer, setIsDesktopDrawer] = useState(() =>
+    window.matchMedia('(min-width: 640px)').matches,
+  )
   const cart = useDemoStore((state) => state.cart)
   const createdProducts = useDemoStore((state) => state.createdProducts)
   const commerceProducts = [...sellableProducts, ...createdProducts]
@@ -21,6 +25,13 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     const product = commerceProducts.find((item) => item.id === line.productId)
     return sum + (product?.priceInPaise ?? 0) * line.quantity
   }, 0)
+
+  useEffect(() => {
+    const media = window.matchMedia('(min-width: 640px)')
+    const handleChange = () => setIsDesktopDrawer(media.matches)
+    media.addEventListener('change', handleChange)
+    return () => media.removeEventListener('change', handleChange)
+  }, [])
 
   useEffect(() => {
     if (!isOpen) return
@@ -55,10 +66,20 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
           <motion.aside
             className="absolute right-0 bottom-0 flex max-h-[92dvh] w-full flex-col rounded-t-sheet bg-ovia-ivory shadow-floating sm:top-0 sm:h-full sm:max-h-none sm:max-w-md sm:rounded-none sm:rounded-l-sheet"
             data-testid="cart-drawer"
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ type: 'spring', stiffness: 340, damping: 34 }}
+            initial={prefersReducedMotion
+              ? { opacity: 0 }
+              : isDesktopDrawer
+                ? { opacity: 0, x: '100%' }
+                : { opacity: 0, y: '100%' }}
+            animate={{ opacity: 1, x: 0, y: 0 }}
+            exit={prefersReducedMotion
+              ? { opacity: 0 }
+              : isDesktopDrawer
+                ? { opacity: 0, x: '100%' }
+                : { opacity: 0, y: '100%' }}
+            transition={prefersReducedMotion
+              ? { duration: 0 }
+              : { type: 'spring', stiffness: 340, damping: 34 }}
           >
             <div className="flex items-center justify-between border-b border-ovia-line px-5 py-4 sm:px-6">
               <div className="flex items-center gap-3">

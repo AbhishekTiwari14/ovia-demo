@@ -9,7 +9,7 @@ import { formatInr } from '../lib/currency'
 import { useDemoStore } from '../store/demoStore'
 
 const inputClasses =
-  'min-h-12 w-full rounded-xl border border-ovia-line bg-white px-4 text-sm text-ovia-ink placeholder:text-ovia-muted/65 transition-colors hover:border-ovia-primary/50 focus:border-ovia-primary focus:outline-none focus-visible:ring-3 focus-visible:ring-ovia-primary/25'
+  'min-h-14 w-full rounded-xl border border-ovia-line bg-white px-4 text-base text-ovia-ink placeholder:text-ovia-muted/65 transition-colors hover:border-ovia-primary/50 focus:border-ovia-primary focus:outline-none focus-visible:ring-3 focus-visible:ring-ovia-primary/25 sm:min-h-12 sm:text-sm'
 
 export function CheckoutPage() {
   const cart = useDemoStore((state) => state.cart)
@@ -83,7 +83,7 @@ export function CheckoutPage() {
 
   return (
     <div className="bg-[#fffdfb]">
-      <Container className="py-7 sm:py-10 lg:py-14">
+      <Container className="py-6 sm:py-10 lg:py-14">
         <Link className="inline-flex items-center gap-2 text-sm font-semibold text-ovia-muted hover:text-ovia-primary" to="/cart">
           <ArrowLeft aria-hidden="true" size={16} />
           Back to bag
@@ -91,11 +91,11 @@ export function CheckoutPage() {
         <div className="mt-6 grid gap-9 lg:grid-cols-[1fr_25rem] lg:gap-16">
           <section>
             <p className="text-[0.68rem] font-bold tracking-[0.16em] text-ovia-primary uppercase">Secure mock checkout</p>
-            <h1 className="mt-2 font-display text-4xl tracking-[-0.035em] sm:text-5xl">Complete your details</h1>
+            <h1 className="mt-2 font-display text-[2.35rem] leading-[1.02] tracking-[-0.035em] sm:text-5xl">Complete your details</h1>
             <p className="mt-3 max-w-xl text-sm leading-6 text-ovia-muted">Visualize the complete customer journey. This form is local to the demo and does not process a real order.</p>
 
-            <form className="mt-8 space-y-8" id="checkout-form" onSubmit={handleSubmit}>
-              <fieldset>
+            <form className="mt-8 space-y-0" id="checkout-form" onSubmit={handleSubmit}>
+              <fieldset className="border-t border-ovia-line py-7">
                 <legend className="font-display text-2xl">Contact</legend>
                 <div className="mt-4">
                   <label className="mb-2 block text-sm font-semibold" htmlFor="email">Email address</label>
@@ -103,7 +103,7 @@ export function CheckoutPage() {
                 </div>
               </fieldset>
 
-              <fieldset>
+              <fieldset className="border-t border-ovia-line py-7">
                 <legend className="font-display text-2xl">Delivery details</legend>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
                   <div>
@@ -133,7 +133,7 @@ export function CheckoutPage() {
                 </div>
               </fieldset>
 
-              <fieldset>
+              <fieldset className="border-y border-ovia-line py-7">
                 <legend className="font-display text-2xl">Payment preview</legend>
                 <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-2xl border border-ovia-primary bg-ovia-blush/25 p-4">
                   <input defaultChecked className="mt-1 accent-ovia-primary" name="payment" type="radio" value="demo-card" />
@@ -146,7 +146,7 @@ export function CheckoutPage() {
             </form>
           </section>
 
-          <aside className="h-fit rounded-[1.5rem] border border-ovia-line bg-ovia-ivory p-5 shadow-card sm:p-6 lg:sticky lg:top-28">
+          <aside className="-mx-4 h-fit border-y border-ovia-line bg-ovia-ivory p-5 sm:mx-0 sm:rounded-[1.5rem] sm:border sm:p-6 sm:shadow-card lg:sticky lg:top-28">
             <div className="flex items-center justify-between gap-4">
               <h2 className="font-display text-2xl">Your order</h2>
               <span className="flex items-center gap-1 text-xs font-semibold text-ovia-success"><ShieldCheck aria-hidden="true" size={14} /> Demo safe</span>
@@ -159,7 +159,7 @@ export function CheckoutPage() {
                   <div className="grid grid-cols-[4rem_1fr_auto] gap-3" key={line.id}>
                     <img alt="" className="aspect-[4/5] w-full rounded-xl object-cover" src={product.image} />
                     <div className="min-w-0">
-                      <p className="font-display leading-tight">{product.catalogueName}</p>
+                      <p className="text-sm leading-snug font-semibold">{product.catalogueName}</p>
                       <p className="mt-1 text-xs text-ovia-muted">Size {line.size} · Qty {line.quantity}</p>
                     </div>
                     <p className="text-sm font-semibold text-ovia-plum">{formatInr(product.priceInPaise * line.quantity)}</p>
@@ -173,7 +173,7 @@ export function CheckoutPage() {
               <div className="flex justify-between gap-4 border-t border-ovia-line pt-4"><dt className="font-semibold">Total</dt><dd className="font-display text-2xl text-ovia-plum">{formatInr(subtotal)}</dd></div>
             </dl>
             <button
-              className="mt-6 min-h-13 w-full rounded-full bg-ovia-primary px-5 text-sm font-bold text-white hover:bg-ovia-plum"
+              className="customer-primary-action mt-6 min-h-14 w-full rounded-full bg-ovia-primary px-5 text-sm font-bold text-white hover:bg-ovia-plum"
               data-testid="place-demo-order"
               form="checkout-form"
               type="submit"

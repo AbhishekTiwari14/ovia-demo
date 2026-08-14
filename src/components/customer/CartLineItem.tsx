@@ -25,11 +25,11 @@ export function CartLineItem({ line, compact = false }: CartLineItemProps) {
 
   return (
     <article
-      className="grid grid-cols-[5.5rem_1fr] gap-4 border-b border-ovia-line py-5 last:border-b-0"
+      className="grid grid-cols-[6.25rem_1fr] gap-3.5 border-b border-ovia-line py-6 last:border-b-0 sm:grid-cols-[7rem_1fr] sm:gap-4"
       data-testid={`cart-line-${product.slug}`}
     >
       <Link
-        className="aspect-[4/5] self-start overflow-hidden rounded-2xl bg-ovia-blush/25"
+        className="aspect-[4/5] self-start overflow-hidden rounded-xl bg-ovia-blush/25"
         to={`/product/${product.slug}`}
       >
         <img
@@ -42,7 +42,7 @@ export function CartLineItem({ line, compact = false }: CartLineItemProps) {
         <div className="flex items-start justify-between gap-3">
           <div>
             <Link
-              className="font-display text-lg leading-tight text-ovia-ink hover:text-ovia-primary"
+              className="text-[0.95rem] leading-snug font-semibold text-ovia-ink hover:text-ovia-primary sm:text-base"
               to={`/product/${product.slug}`}
             >
               {product.catalogueName}
@@ -54,7 +54,7 @@ export function CartLineItem({ line, compact = false }: CartLineItemProps) {
           </div>
           <button
             aria-label={`Remove ${product.catalogueName} from bag`}
-            className="flex size-10 shrink-0 items-center justify-center rounded-full text-ovia-muted transition-colors hover:bg-ovia-blush/55 hover:text-ovia-plum"
+            className="flex size-11 shrink-0 items-center justify-center rounded-full text-ovia-muted transition-colors hover:bg-ovia-blush/55 hover:text-ovia-plum"
             onClick={() => removeFromCart(line.id)}
             type="button"
           >
@@ -70,7 +70,7 @@ export function CartLineItem({ line, compact = false }: CartLineItemProps) {
         >
           <button
             aria-label="Decrease quantity"
-            className="flex size-9 items-center justify-center rounded-full text-ovia-plum hover:bg-ovia-blush/45"
+            className="flex size-11 items-center justify-center rounded-full text-ovia-plum hover:bg-ovia-blush/45"
             onClick={() => setCartQuantity(line.id, line.quantity - 1)}
             type="button"
           >
@@ -84,7 +84,7 @@ export function CartLineItem({ line, compact = false }: CartLineItemProps) {
           </span>
           <button
             aria-label="Increase quantity"
-            className="flex size-9 items-center justify-center rounded-full text-ovia-plum hover:bg-ovia-blush/45"
+            className="flex size-11 items-center justify-center rounded-full text-ovia-plum hover:bg-ovia-blush/45"
             onClick={() => setCartQuantity(line.id, line.quantity + 1)}
             type="button"
           >

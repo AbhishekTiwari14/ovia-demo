@@ -21,8 +21,8 @@ export function ProductSection({
   description,
 }: ProductSectionProps) {
   return (
-    <section className="scroll-mt-28 py-18 sm:py-24 lg:py-30" id={id}>
-      <div className="mb-9 flex flex-col justify-between gap-5 sm:mb-12 sm:flex-row sm:items-end">
+    <section className="scroll-mt-24 py-16 sm:scroll-mt-28 sm:py-24 lg:py-30" id={id}>
+      <div className="mb-8 flex flex-col justify-between gap-4 sm:mb-12 sm:flex-row sm:items-end">
         <div className="max-w-2xl">
           {eyebrow && (
             <p className="type-eyebrow mb-3">
@@ -39,7 +39,7 @@ export function ProductSection({
           )}
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-7 lg:gap-y-14">
+      <div className="grid grid-cols-2 gap-x-3 gap-y-11 sm:gap-x-6 lg:grid-cols-4 lg:gap-x-7 lg:gap-y-14">
         {products.map((product, index) => (
           <ProductCard
             badge={badge}

@@ -75,12 +75,12 @@ export function BusinessRevealSection() {
               <p className="text-[0.61rem] font-bold tracking-[0.13em] text-ovia-primary uppercase">
                 Simulated business data
               </p>
-              <div className="mt-3 grid grid-cols-3 gap-2 sm:gap-3">
-                {previewMetrics.map(({ label, value, icon: Icon }) => (
-                  <div className="min-w-0 border border-ovia-line bg-white p-3 sm:p-4" key={label}>
+              <div className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3">
+                {previewMetrics.map(({ label, value, icon: Icon }, index) => (
+                  <div className={index === 2 ? 'col-span-2 min-w-0 border border-ovia-line bg-white p-4 sm:col-span-1' : 'min-w-0 border border-ovia-line bg-white p-4'} key={label}>
                     <Icon aria-hidden="true" className="text-ovia-primary" size={16} />
                     <p className="mt-3 truncate text-lg font-semibold tracking-[-0.03em] text-ovia-ink sm:text-2xl">{value}</p>
-                    <p className="mt-1 truncate text-[0.58rem] text-ovia-muted sm:text-[0.68rem]">{label}</p>
+                    <p className="mt-1 truncate text-[0.68rem] text-ovia-muted">{label}</p>
                   </div>
                 ))}
               </div>

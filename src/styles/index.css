@@ -72,6 +72,14 @@ body {
     color: var(--color-ovia-ink);
   }
 
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
   .type-eyebrow {
     font-size: 0.67rem;
     font-weight: 700;
@@ -111,6 +119,10 @@ a {
 :focus-visible {
   outline: 3px solid rgb(166 79 140 / 0.38);
   outline-offset: 3px;
+}
+
+.customer-search-input:focus-visible {
+  outline: none;
 }
 
 ::selection {

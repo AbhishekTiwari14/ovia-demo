@@ -186,6 +186,7 @@ export function ProductRoutePage() {
 
   return (
     <>
+      <div className="pb-24 lg:pb-0">
       <div className="border-b border-ovia-line bg-white/55">
         <Container className="flex min-h-12 items-center gap-2 text-xs text-ovia-muted">
           <Link className="inline-flex items-center gap-1 hover:text-ovia-primary" to="/">
@@ -211,6 +212,7 @@ export function ProductRoutePage() {
               fetchPriority="high"
               src={product.image}
             />
+            <span className="absolute bottom-4 left-4 bg-ovia-ivory/90 px-3 py-1.5 text-[0.65rem] font-bold tracking-[0.08em] text-ovia-plum backdrop-blur-sm lg:hidden">1 / 1</span>
             <button
               aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
               aria-pressed={isWishlisted}
@@ -226,29 +228,40 @@ export function ProductRoutePage() {
           </motion.div>
 
           <motion.div
-            className="px-5 py-8 sm:px-0 sm:py-10 lg:sticky lg:top-28 lg:self-start lg:py-6"
+            className="px-5 py-7 sm:px-0 sm:py-10 lg:sticky lg:top-28 lg:self-start lg:py-6"
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, delay: 0.08 }}
           >
             <p className="text-[0.68rem] font-bold tracking-[0.16em] text-ovia-primary uppercase">{isDemoProduct(product) ? 'New Ovia edit' : 'Ovia catalogue'}</p>
-            <h1 className="mt-3 font-display text-4xl leading-[1.05] tracking-[-0.035em] sm:text-5xl">{product.catalogueName}</h1>
-            <p className="mt-4 font-display text-3xl text-ovia-plum">{formatInr(product.priceInPaise)}</p>
+            <h1 className="mt-3 font-display text-[2.15rem] leading-[1.02] tracking-[-0.035em] sm:text-5xl">{product.catalogueName}</h1>
+            <p className="mt-3 text-xl font-bold text-ovia-plum sm:mt-4 sm:font-display sm:text-3xl sm:font-medium">{formatInr(product.priceInPaise)}</p>
             {isDemoProduct(product) && (
               <p className="mt-5 max-w-xl text-sm leading-7 text-ovia-muted">{product.description}</p>
             )}
 
-            <div className="mt-8 border-t border-ovia-line pt-7">
+            <dl className="mt-6 grid grid-cols-2 border-y border-ovia-line py-4 text-sm">
+              <div className="border-r border-ovia-line pr-4">
+                <dt className="text-xs text-ovia-muted">Available sizes</dt>
+                <dd className="mt-1.5 font-semibold">{product.sizes.join(', ')}</dd>
+              </div>
+              <div className="pl-4">
+                <dt className="text-xs text-ovia-muted">Catalogue color</dt>
+                <dd className="mt-1.5 font-semibold">{product.colors[0]?.label}</dd>
+              </div>
+            </dl>
+
+            <div className="mt-7">
               <div className="flex items-center justify-between gap-4">
                 <h2 className="text-sm font-bold tracking-[0.08em] uppercase">Select size</h2>
                 <span className="text-xs text-ovia-muted">Required</span>
               </div>
-              <div className="mt-4 flex flex-wrap gap-3" role="group" aria-label="Available sizes">
+              <div className="mt-4 flex flex-wrap gap-2.5" role="group" aria-label="Available sizes">
                 {product.sizes.map((size) => (
                   <button
                     aria-pressed={selectedSize === size}
                     className={classNames(
-                      'min-h-12 min-w-14 rounded-full border px-5 text-sm font-bold transition-colors duration-150 active:translate-y-px',
+                      'min-h-13 min-w-14 rounded-full border px-5 text-sm font-bold transition-colors duration-150 active:translate-y-px',
                       selectedSize === size
                         ? 'border-ovia-primary bg-ovia-primary text-white'
                         : 'border-ovia-line bg-white text-ovia-ink hover:border-ovia-primary hover:text-ovia-primary',
@@ -296,7 +309,7 @@ export function ProductRoutePage() {
               <div className="mt-4 inline-flex items-center rounded-full border border-ovia-line bg-white">
                 <button
                   aria-label="Decrease quantity"
-                  className="flex size-11 items-center justify-center rounded-full text-ovia-plum hover:bg-ovia-blush/45 disabled:opacity-35"
+                  className="flex size-12 items-center justify-center rounded-full text-ovia-plum hover:bg-ovia-blush/45 disabled:opacity-35"
                   disabled={quantity === 1}
                   onClick={() => setQuantity((value) => Math.max(1, value - 1))}
                   type="button"
@@ -306,7 +319,7 @@ export function ProductRoutePage() {
                 <span aria-live="polite" className="min-w-10 text-center font-semibold">{quantity}</span>
                 <button
                   aria-label="Increase quantity"
-                  className="flex size-11 items-center justify-center rounded-full text-ovia-plum hover:bg-ovia-blush/45"
+                  className="flex size-12 items-center justify-center rounded-full text-ovia-plum hover:bg-ovia-blush/45"
                   onClick={() => setQuantity((value) => value + 1)}
                   type="button"
                 >
@@ -316,7 +329,7 @@ export function ProductRoutePage() {
             </div>
 
             <button
-              className="customer-primary-action mt-8 inline-flex min-h-14 w-full items-center justify-center gap-2 rounded-full bg-ovia-primary px-6 text-sm font-bold text-white shadow-[0_12px_30px_rgb(166_79_140/0.22)] hover:bg-ovia-plum disabled:cursor-not-allowed disabled:bg-ovia-muted/30 disabled:shadow-none"
+              className="customer-primary-action mt-8 hidden min-h-14 w-full items-center justify-center gap-2 rounded-full bg-ovia-primary px-6 text-sm font-bold text-white shadow-[0_12px_30px_rgb(166_79_140/0.22)] hover:bg-ovia-plum disabled:cursor-not-allowed disabled:bg-ovia-muted/30 disabled:shadow-none lg:inline-flex"
               data-testid="add-to-bag"
               disabled={!canAddToBag || addToBagState !== 'idle'}
               onClick={handleAddToBag}
@@ -332,23 +345,13 @@ export function ProductRoutePage() {
                     : 'Select a size to continue'}
             </button>
             <button
-              className="mt-3 min-h-11 w-full rounded-full text-sm font-semibold text-ovia-plum hover:bg-ovia-blush/40"
+              className="mt-3 hidden min-h-11 w-full rounded-full text-sm font-semibold text-ovia-plum hover:bg-ovia-blush/40 lg:block"
               onClick={openCart}
               type="button"
             >
               View current bag
             </button>
 
-            <dl className="mt-7 grid grid-cols-2 gap-3 rounded-2xl bg-white/70 p-4 text-sm">
-              <div>
-                <dt className="text-xs text-ovia-muted">Available sizes</dt>
-                <dd className="mt-1 font-semibold">{product.sizes.join(', ')}</dd>
-              </div>
-              <div>
-                <dt className="text-xs text-ovia-muted">Catalogue color</dt>
-                <dd className="mt-1 font-semibold">{product.colors[0]?.label}</dd>
-              </div>
-            </dl>
           </motion.div>
         </div>
       </Container>
@@ -359,11 +362,41 @@ export function ProductRoutePage() {
             <p className="text-[0.68rem] font-bold tracking-[0.16em] text-ovia-primary uppercase">More from the edit</p>
             <h2 className="mt-2 font-display text-3xl sm:text-4xl">You may also like</h2>
             <div className="mt-7 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4 lg:gap-6">
-              {relatedProducts.map((item) => <ProductCard key={item.id} product={item} />)}
+              {relatedProducts.map((item) => <ProductCard key={item.id} onOpenCart={openCart} product={item} />)}
             </div>
           </Container>
         </section>
       )}
+      </div>
+
+      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-ovia-line bg-ovia-ivory/97 px-4 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-10px_30px_rgb(41_35_39/0.09)] backdrop-blur-xl lg:hidden" data-testid="mobile-pdp-action-bar">
+        <div className="mx-auto flex max-w-lg items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-base font-bold text-ovia-plum">{formatInr(product.priceInPaise)}</p>
+            <p className="mt-0.5 truncate text-[0.7rem] text-ovia-muted">
+              {selectedSize ? `Size ${selectedSize}${selectedColor ? ` · ${selectedColor}` : ''}` : 'Select a size to continue'}
+            </p>
+          </div>
+          <button
+            className="customer-primary-action inline-flex min-h-13 min-w-[10rem] items-center justify-center gap-2 rounded-full bg-ovia-primary px-5 text-sm font-bold text-white shadow-[0_8px_22px_rgb(166_79_140/0.2)] disabled:cursor-not-allowed disabled:bg-ovia-muted/30 disabled:shadow-none"
+            data-testid="mobile-sticky-add-to-bag"
+            disabled={!canAddToBag || addToBagState !== 'idle'}
+            onClick={handleAddToBag}
+            type="button"
+          >
+            {addToBagState === 'added' ? <Check aria-hidden="true" size={18} /> : <ShoppingBag aria-hidden="true" size={18} />}
+            {addToBagState === 'adding'
+              ? 'Adding…'
+              : addToBagState === 'added'
+                ? 'Added'
+                : !selectedSize
+                  ? 'Select size'
+                  : !requiredColorSelected
+                    ? 'Select color'
+                    : 'Add to bag'}
+          </button>
+        </div>
+      </div>
 
       {selectedSize && (
         <ConfirmationSheet

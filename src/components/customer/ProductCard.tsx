@@ -89,7 +89,7 @@ export function ProductCard({
           aria-label={isWishlisted ? `Remove ${product.catalogueName} from wishlist` : `Add ${product.catalogueName} to wishlist`}
           aria-pressed={isWishlisted}
           className={classNames(
-            'absolute top-2.5 right-2.5 flex size-11 items-center justify-center rounded-full border border-white/60 shadow-sm backdrop-blur-sm transition-[opacity,background-color,color,transform] duration-250 active:translate-y-px md:translate-y-1 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:focus-visible:translate-y-0 md:focus-visible:opacity-100',
+            'absolute top-2.5 right-2.5 flex size-11 items-center justify-center rounded-full border border-white/60 shadow-sm backdrop-blur-sm transition-[opacity,background-color,color,transform] duration-250 active:translate-y-px lg:translate-y-1 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:focus-visible:translate-y-0 lg:focus-visible:opacity-100',
             isWishlisted ? 'bg-ovia-primary text-white opacity-100' : 'bg-white/88 text-ovia-plum hover:bg-ovia-blush',
           )}
           onClick={() => toggleWishlist(product.id)}
@@ -100,14 +100,15 @@ export function ProductCard({
 
         <button
           aria-live="polite"
-          className="flex min-h-11 w-full items-center justify-center gap-2 border-b border-ovia-line bg-ovia-ivory/96 px-2 text-[0.62rem] font-bold tracking-[0.06em] text-ovia-plum uppercase backdrop-blur-md transition-[opacity,transform,background-color] duration-250 hover:bg-white active:translate-y-px disabled:cursor-wait sm:px-3 sm:text-[0.68rem] md:absolute md:inset-x-4 md:bottom-4 md:w-auto md:border-0 md:shadow-sm md:translate-y-2 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100 md:focus-visible:translate-y-0 md:focus-visible:opacity-100"
+          aria-label={`${quickAddLabel} for ${product.catalogueName}`}
+          className="absolute right-2.5 bottom-2.5 flex size-11 items-center justify-center rounded-full bg-ovia-ivory/96 text-ovia-plum shadow-sm backdrop-blur-md transition-[opacity,transform,background-color] duration-250 hover:bg-white active:translate-y-px disabled:cursor-wait lg:inset-x-4 lg:bottom-4 lg:h-11 lg:w-auto lg:gap-2 lg:rounded-none lg:px-3 lg:text-[0.68rem] lg:font-bold lg:tracking-[0.06em] lg:uppercase lg:translate-y-2 lg:opacity-0 lg:group-hover:translate-y-0 lg:group-hover:opacity-100 lg:focus-visible:translate-y-0 lg:focus-visible:opacity-100"
           data-testid={`quick-add-${product.slug}`}
           disabled={quickAddState !== 'idle'}
           onClick={handleQuickAdd}
           type="button"
         >
           {quickAddState === 'added' ? <Check aria-hidden="true" size={16} /> : <Plus aria-hidden="true" size={16} />}
-          {quickAddLabel}
+          <span className="sr-only lg:not-sr-only">{quickAddLabel}</span>
         </button>
       </div>
 
@@ -116,16 +117,16 @@ export function ProductCard({
         <Link
           className={classNames(
             'line-clamp-2 font-sans leading-snug text-ovia-ink transition-colors hover:text-ovia-primary',
-            variant === 'featured' ? 'text-lg sm:text-xl lg:text-2xl' : 'text-sm sm:text-base',
+            variant === 'featured' ? 'text-lg sm:text-xl lg:text-2xl' : 'text-[0.88rem] sm:text-base',
           )}
           to={`/product/${product.slug}`}
         >
           {product.catalogueName}
         </Link>
-        <p className={classNames('mt-1.5 font-sans font-semibold text-ovia-plum', variant === 'featured' ? 'text-base lg:text-lg' : 'text-sm sm:text-base')}>
+        <p className={classNames('mt-1.5 font-sans font-bold text-ovia-plum', variant === 'featured' ? 'text-base lg:text-lg' : 'text-[0.9rem] sm:text-base')}>
           {formatInr(product.priceInPaise)}
         </p>
-        <p className="mt-2 text-[0.67rem] tracking-[0.04em] text-ovia-muted sm:text-xs">
+        <p className="mt-2 text-[0.7rem] tracking-[0.03em] text-ovia-muted sm:text-xs">
           Sizes {product.sizes.join(' · ')}
         </p>
       </div>

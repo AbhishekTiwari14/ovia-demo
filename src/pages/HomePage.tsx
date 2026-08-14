@@ -98,13 +98,13 @@ export function HomePage() {
 
       <Container>
         <section aria-labelledby="category-title" className="py-16 sm:py-20 lg:py-24">
-          <div className="mb-8 max-w-xl sm:mb-10">
+          <div className="mb-7 max-w-xl sm:mb-10">
             <p className="type-eyebrow">Find your silhouette</p>
             <h2 className="type-section-title mt-3" id="category-title">Shop by category</h2>
           </div>
-          <div className="grid grid-cols-2 gap-x-3 gap-y-7 sm:grid-cols-4 sm:gap-x-6">
+          <div className="scrollbar-none -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-4 sm:gap-x-6 sm:overflow-visible sm:px-0 sm:pb-0">
             {categoryCards.map(({ label, href, product }) => (
-              <motion.a className="group block" href={href} key={label}>
+              <motion.a className="group block w-[68vw] max-w-[17rem] shrink-0 snap-start sm:w-auto sm:max-w-none" href={href} key={label}>
                 <div className="overflow-hidden bg-[#f0e5df]">
                   <img
                     alt=""
@@ -114,7 +114,7 @@ export function HomePage() {
                   />
                 </div>
                 <div className="mt-3 flex items-center justify-between border-b border-ovia-line pb-3 text-ovia-ink transition-colors group-hover:text-ovia-primary">
-                  <span className="font-display text-xl font-medium sm:text-2xl">{label}</span>
+                  <span className="font-display text-2xl font-medium">{label}</span>
                   <ArrowRight aria-hidden="true" size={17} />
                 </div>
               </motion.a>
